@@ -1,9 +1,7 @@
 from django import forms
 
-
-class MovieForm(forms):
-    show_id = forms.CharField(max_length=10)
-    type = forms.CharField(max_length=10)
+class MovieForm(forms.Form):
+    type = forms.CharField(max_length=10, required=True)
     title = forms.CharField(max_length=255)
     director = forms.CharField(max_length=255, required=False)
     country = forms.CharField(max_length=100, required=False)
@@ -13,8 +11,12 @@ class MovieForm(forms):
     duration = forms.IntegerField()
     description = forms.CharField(max_length=255, required=False)
 
-class ActorForm(forms):
+    # genre = forms.ChoiceField(choices=[], required=True)
+    # actor = forms.ChoiceField(choices=[], required=True)
+    
+
+class ActorForm(forms.Form):
     actor_name = forms.CharField(max_length=255)
 
-class GenreForm(forms):
+class GenreForm(forms.Form):
     genre_name = forms.CharField(max_length=255)

@@ -2,6 +2,7 @@
 <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Movie</h1>
 <form method="POST">
   {% csrf_token %} {{ form.as_p }}
+  
   <button type="submit">
     {% if form.instance.pk %}Update{% else %}Create{% endif %}
   </button>

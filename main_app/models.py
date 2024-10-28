@@ -27,6 +27,12 @@ class Actor(Base):
 
     shows = relationship('ShowActor', back_populates='actor')
 
+    def to_dict(self):
+        return {
+            'actor_id': self.actor_id,
+            'actor_name': self.actor_name
+        }
+
 class ShowActor(Base):
     __tablename__ = 'show_actors'
     show_id = Column(String(10), ForeignKey('movies.show_id'), primary_key=True)
@@ -41,6 +47,12 @@ class Genre(Base):
     genre_name = Column(String(255), nullable=False)
 
     shows = relationship('ShowGenre', back_populates='genre')
+
+    def to_dict(self):
+        return {
+            'genre_id': self.genre_id,
+            'genre_name': self.genre_name
+        }
 
 class ShowGenre(Base):
     __tablename__ = 'show_genres'
