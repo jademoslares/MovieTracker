@@ -26,8 +26,10 @@
             </li>
           </ul>
           <ul class="right">
-            <li><a href="/about">About</a></li>
-            <li><a href="/movies">Movies</a></li>
+            <li><a href="{% url 'movie_create' %}">Add Movie</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'home' %}">Movies</a></li>
+
           </ul>
         </div>
       </nav>

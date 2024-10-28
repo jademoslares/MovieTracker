@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{{ movie.title }}</h1>
+<p>Director: {{ movie.director }}</p>
+<p>Country: {{ movie.country }}</p>
+<p>Release Year: {{ movie.release_year }}</p>
+<p>Rating: {{ movie.rating }}</p>
+<p>Description: {{ movie.description }}</p>
+
+<a href="{% url 'movie_update' movie.show_id %}">Edit</a>
+<form action="{% url 'movie_delete' movie.show_id %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">Delete</button>
+</form>
+<a href="{% url 'home' %}">Back to List</a>
+{% endblock %}

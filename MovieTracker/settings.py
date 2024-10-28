@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbMovie',
-        'USER' : 'wsl_root',
+        'USER' : 'root',
         'PASSWORD' : 'root',
-        'HOST' : '192.168.1.228',
+        'HOST' : 'localhost',
         'PORT' : '3306',
     }
 }
