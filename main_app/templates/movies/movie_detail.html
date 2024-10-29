@@ -7,9 +7,20 @@
 <p>Description: {{ movie.description }}</p>
 
 <a href="{% url 'movie_update' movie.show_id %}">Edit</a>
-<form action="{% url 'movie_delete' movie.show_id %}" method="POST">
+<form id="delete-form" action="{% url 'movie_delete' movie.show_id %}" method="POST" style="display:none;">
   {% csrf_token %}
   <button type="submit">Delete</button>
 </form>
+
+<button type="button" onclick="confirmDelete()">Delete</button>
+
 <a href="{% url 'home' %}">Back to List</a>
+
+<script>
+  function confirmDelete() {
+    if (confirm("Are you sure you want to delete this movie?")) {
+      document.getElementById('delete-form').submit();
+    }
+  }
+  </script>
 {% endblock %}

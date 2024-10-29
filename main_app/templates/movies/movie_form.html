@@ -1,11 +1,73 @@
-{% extends 'base.html' %} {% block content %}
-<h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Movie</h1>
-<form method="POST">
-  {% csrf_token %} {{ form.as_p }}
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ action }} Movie</h1>
+
+<form method="POST" class="movie-form">
+  {% csrf_token %}
   
-  <button type="submit">
-    {% if form.instance.pk %}Update{% else %}Create{% endif %}
+  <!-- Display form errors -->
+  {% if form.non_field_errors %}
+    <div class="red-text text-darken-2">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <div class="input-field col s12">
+    {{ form.type.label }} {{ form.type }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.title.label }} {{ form.title }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.director.label }} {{ form.director }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.country.label }} {{ form.country }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.date_added.label }} {{ form.date_added }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.release_year.label }} {{ form.release_year }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.rating.label }} {{ form.rating }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.duration.label }} {{ form.duration }}
+  </div>
+  <div class="input-field col s12">
+    {{ form.description.label }} {{ form.description }}
+  </div>
+
+<!-- Actors Field -->
+<div class="input-field col s12">
+  <select multiple id="actors" name="actors">
+      <option value="" disabled>Choose your actors</option>
+      {% for actor_id, actor_name in form.actors.field.choices %}
+          <option value="{{ actor_id }}" {% if actor_id in form.actors.value %}selected{% endif %}>{{ actor_name }}</option>
+      {% endfor %}
+  </select>
+  <label for="actors">Actors</label>
+</div>
+
+<!-- Genres Field -->
+<div class="input-field col s12">
+  <select multiple id="genres" name="genres">
+      <option value="" disabled>Choose your genres</option>
+      {% for genre_id, genre_name in form.genres.field.choices %}
+          <option value="{{ genre_id }}" {% if genre_id in form.genres.value %}selected{% endif %}>{{ genre_name }}</option>
+      {% endfor %}
+  </select>
+  <label for="genres">Genres</label>
+</div>
+
+  <button type="submit" class="btn waves-effect waves-light">
+    {{ action }}
   </button>
 </form>
-<a href="{% url 'home' %}">Cancel</a>
+
+<a href="{% url 'home' %}" class="btn grey lighten-1">Cancel</a>
+
 {% endblock %}

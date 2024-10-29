@@ -19,7 +19,7 @@ def home(request):
 def movie_detail(request, show_id):
     session: Session = SessionLocal()
     try:
-        movie = session.query(Movie).filter_by(show_id == show_id).first()
+        movie = session.query(Movie).filter_by(show_id=show_id).first()
     finally:
         session.close()
 
@@ -80,7 +80,7 @@ def movie_create(request):
     else:
         form = MovieForm()
 
-    return render(request, 'movies/movie_form.html', {'form': form})
+    return render(request, 'movies/movie_form.html', {'form': form, 'action': 'Create'})
 
 def movie_update(request, show_id):
     session = SessionLocal()
@@ -153,11 +153,24 @@ def movie_update(request, show_id):
             'genres': [genre.genre_id for genre in movie.genres],
         })
 
-    return render(request, 'movies/movie_form.html', {'form': form})
+    return render(request, 'movies/movie_form.html', {'form': form, 'action': 'Update'})
 
 
 def movie_delete(request, show_id):
-    pass
+    session = SessionLocal()
+    movie = session.query(Movie).filter_by(show_id=show_id).first()
+
+    if movie:
+        try:
+            session.delete(movie)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            print(f"Error occurred: {e}")
+        finally:
+            session.close()
+    
+    return redirect('home')
 
 ###########################################################
 #################### ACTOR ################################
