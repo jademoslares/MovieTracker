@@ -1,4 +1,7 @@
 from django import forms
+from .models import Movie, Actor, Genre
+from sqlalchemy.orm import Session
+from utilities.sqlalchemy_setup import SessionLocal
 
 class MovieForm(forms.Form):
     type = forms.CharField(max_length=10, required=True)
@@ -11,8 +14,28 @@ class MovieForm(forms.Form):
     duration = forms.IntegerField()
     description = forms.CharField(max_length=255, required=False)
 
-    # genre = forms.ChoiceField(choices=[], required=True)
-    # actor = forms.ChoiceField(choices=[], required=True)
+    actors = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
+    genres = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        session: Session = SessionLocal()
+        try:
+            actor_list = session.query(Actor).all()
+            self.fields['actors'].choices = [(actor.actor_id, actor.actor_name) for actor in actor_list]
+
+            genre_list = session.query(Genre).all()
+            self.fields['genres'].choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
+        finally:
+            session.close()
+
     
 
 class ActorForm(forms.Form):

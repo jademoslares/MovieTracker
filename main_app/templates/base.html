@@ -11,10 +11,19 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
     <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.1.min.js"
+    ></script>
+    <link
       rel="stylesheet"
       type="text/css"
       href="{% static 'css/style.css' %}"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </head>
   <body>
     <header class="navbar-fixed">
@@ -31,7 +40,6 @@
             <li><a href="{% url 'genre_create' %}">Add Genre</a></li>
             <li><a href="{% url 'about' %}">About</a></li>
             <li><a href="{% url 'home' %}">Movies</a></li>
-
           </ul>
         </div>
       </nav>
@@ -42,5 +50,6 @@
         All Rights Reserved, &copy; 2021 Cat Collector &nbsp;
       </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
   </body>
 </html>
