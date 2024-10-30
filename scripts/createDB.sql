@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS movies (
     type VARCHAR(10),
     title VARCHAR(255),
     director VARCHAR(255),
-    country VARCHAR(100),
+    country VARCHAR(255),
     date_added DATE,
     release_year INT,
     rating VARCHAR(10),
