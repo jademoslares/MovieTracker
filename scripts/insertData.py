@@ -1,5 +1,5 @@
 ##########################################################################################
-######## TO RUN THIS SCRIPT TYPE IN THE TERMINAL: python scripts/insertData.py ###########
+######## TO RUN THIS SCRIPT TYPE IN THE TERMINAL: python3 -m scripts.insertData ###########
 ##########################################################################################
 import pandas as pd
 from utilities.sqlalchemy_setup import SessionLocal, text
@@ -14,9 +14,9 @@ netflix_data = netflix_data.fillna({"title": "N/A", "director": "N/A", "country"
 movies_data = netflix_data[netflix_data['type'] == 'Movie'].copy()
 movies_data['show_id'] = movies_data['show_id'].str.replace("s", "", regex=False)
 
-output_csv_file_path = 'netflix_movies.csv'
-movies_data.to_csv(output_csv_file_path, index=False)
-print(f'Successfully saved movies data to {output_csv_file_path}')
+# output_csv_file_path = 'netflix_movies.csv'
+# movies_data.to_csv(output_csv_file_path, index=False)
+# print(f'Successfully saved movies data to {output_csv_file_path}')
 
 
 def insert_data():
@@ -24,7 +24,7 @@ def insert_data():
         try:
             for _, row in movies_data.iterrows():
                 # Insert movie data
-                print(row["show_id"])
+                print(row["show_id"] + " / " + len(movies_data))
                 session.execute(text("""
                     INSERT INTO movies (show_id, type, title, director, country, date_added, release_year, rating, duration, description)
                     VALUES (:show_id, :type, :title, :director, :country, STR_TO_DATE(:date_added, '%M %d, %Y'), :release_year, :rating, :duration, :description)

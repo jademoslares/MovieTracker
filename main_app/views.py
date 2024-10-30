@@ -20,10 +20,13 @@ def movie_detail(request, show_id):
     session: Session = SessionLocal()
     try:
         movie = session.query(Movie).filter_by(show_id=show_id).first()
+        actors = session.query(Actor).join(ShowActor).filter(ShowActor.show_id == show_id).all()
+        genres = session.query(Genre).join(ShowGenre).filter(ShowGenre.show_id == show_id).all()
+        print(actors)
     finally:
         session.close()
 
-    return render(request, 'movies/movie_detail.html', {'movie': movie})
+    return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres})
 
 def movie_create(request):
     if request.method == 'POST':
