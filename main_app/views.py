@@ -9,6 +9,7 @@ from .models import User,Movie,Actor,Genre,ShowActor,ShowGenre, Watchlist, Watch
 from .forms import MovieForm, ActorForm, GenreForm, RegistrationForm, LoginForm
 from datetime import datetime
 from django.core.paginator import Paginator
+from main_app.exceptions import MovieNotFoundException,UserNotAuthorizedException
 
 def home(request):
     session: Session = SessionLocal()
@@ -16,9 +17,11 @@ def home(request):
     try:
         if query:
             movies = session.query(Movie).filter(Movie.title.ilike(f'%{query}%')).all()
+            raise MovieNotFoundException(f"No movies found with the title '{query}'.")
         else:
             movies = session.query(Movie).all()
-
+    except MovieNotFoundException as e:
+        print(f"Error occurred: {e}")
     finally:
         session.close()
 
@@ -47,6 +50,11 @@ def movie_detail(request, show_id):
             if check_watchlist:
                 is_in_watchlist = True
                 checklistStatus = check_watchlist.status.value
+        else:
+            currently_user = None
+            raise UserNotAuthorizedException("User is not authorized to add to watchlist.")
+    except UserNotAuthorizedException as e:
+        print(f"Error occurred: {e}")
     finally:
         session.close()
         print(is_in_watchlist)
