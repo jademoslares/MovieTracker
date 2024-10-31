@@ -3,12 +3,32 @@
 {% block content %}
 <div class="container">
     <h1 class="center-align">Profile Page</h1>
-    <p class="flow-text">Welcome, {{ user.username }}!</p>
+    <p class="flow-text">Welcome, {{ current_user.username }}!</p>
+    <h2>Your Profile</h2>
+    <div class="card">
+        <div class="card-content">
+            <div class="right-align">
+                <a href="{% url 'profile_update' current_user.user_id %}" class="btn blue waves-effect waves-light">Edit Profile</a>
+            </div>
+            <table class="striped">
+                <tbody>
+                    <tr>
+                        <th>Username</th>
+                        <td>{{ current_user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Password</th>
+                        <td>************</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <h2>Your Watchlist Stats</h2>
     <canvas id="watchlistStatsChart" width="300" height="300" style="max-width: 300px; max-height: 300px;"></canvas> 
 
-    <h2>{{ user.username }}'s Watchlist Count: {{stats.total}}</h2>
+    <h2>{{ current_user.username }}'s Watchlist Count: {{stats.total}}</h2>
     <table class="striped centered">
         <thead>
             <tr>
@@ -31,10 +51,10 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'remove_from_watchlist' show_id user.user_id %}" class="btn red waves-effect waves-light">Remove</a>
-                    <a href="{% url 'update_watchlist' show_id user.user_id 'plan_to_watch' %}" class="btn blue waves-effect waves-light">Plan to Watch</a>
-                    <a href="{% url 'update_watchlist' show_id user.user_id 'watching' %}" class="btn green waves-effect waves-light">Watching</a>
-                    <a href="{% url 'update_watchlist' show_id user.user_id 'finished' %}" class="btn orange waves-effect waves-light">Finished</a>
+                    <a href="{% url 'remove_from_watchlist' show_id current_user.user_id %}" class="btn red waves-effect waves-light">Remove</a>
+                    <a href="{% url 'update_watchlist' show_id current_user.user_id 'plan_to_watch' %}" class="btn blue waves-effect waves-light">Plan to Watch</a>
+                    <a href="{% url 'update_watchlist' show_id current_user.user_id 'watching' %}" class="btn green waves-effect waves-light">Watching</a>
+                    <a href="{% url 'update_watchlist' show_id current_user.user_id 'finished' %}" class="btn orange waves-effect waves-light">Finished</a>
                 </td>
             </tr>
             {% empty %}

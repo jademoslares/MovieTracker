@@ -16,15 +16,13 @@ def home(request):
     try:
         if query:
             movies = session.query(Movie).filter(Movie.title.ilike(f'%{query}%')).all()
-            if not movies:
-                movies = session.query(Movie).filter(Movie.genres.ilike(f'%{query}%')).all()
         else:
             movies = session.query(Movie).all()
 
     finally:
         session.close()
 
-    paginator = Paginator(movies, 5)
+    paginator = Paginator(movies, 9)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -41,10 +39,11 @@ def movie_detail(request, show_id):
 
         is_in_watchlist = False
         checklistStatus = ''
-
+        user = None
+ 
         if request.user.is_authenticated:
-            user = session.query(User).filter_by(username=request.user.username).first()
-            check_watchlist = session.query(Watchlist).filter_by(user_id=user.user_id, show_id=show_id).first()
+            currently_user = session.query(User).filter_by(username=request.user.username).first()
+            check_watchlist = session.query(Watchlist).filter_by(user_id=currently_user.user_id, show_id=show_id).first()
             if check_watchlist:
                 is_in_watchlist = True
                 checklistStatus = check_watchlist.status.value
@@ -52,7 +51,7 @@ def movie_detail(request, show_id):
         session.close()
         print(is_in_watchlist)
 
-    return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres, 'is_in_watchlist': is_in_watchlist, 'checklistStatus': checklistStatus})
+    return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres, 'is_in_watchlist': is_in_watchlist, 'checklistStatus': checklistStatus, 'currently_user': currently_user})
 
 @user_type_required('admin')
 def movie_create(request):
@@ -125,8 +124,9 @@ def movie_update(request, show_id):
     session = SessionLocal()
     movie = session.query(Movie).filter_by(show_id=show_id).first()
 
-    if not movie:
-        return redirect('home')
+    # For debugging not valid forms
+    # if not movie:
+    #     return redirect('home')
     
     if request.method == 'POST':
         form = MovieForm(request.POST)
@@ -278,7 +278,7 @@ def genre_create(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, current_username=None)
 
         if form.is_valid():
             session = SessionLocal()
@@ -300,7 +300,7 @@ def register(request):
     else:
         form = RegistrationForm()
     
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'users/register.html', {'form': form, 'action': 'Register'})
 
 def login_view(request):
     if request.method == 'POST':
@@ -343,6 +343,7 @@ def profile(request,user_name):
                 .filter(Watchlist.user_id == user.user_id)
                 .all()
             )
+
             finished_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.finished).count()
             watching_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.watching).count()
             plan_to_watch_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.plan_to_watch).count()
@@ -360,7 +361,31 @@ def profile(request,user_name):
     finally:
         session.close()
 
-    return render(request, 'users/profile.html', { 'user': user, 'watchlist': personal_movies, 'stats': stats_dict })
+    return render(request, 'users/profile.html', { 'current_user': user, 'watchlist': personal_movies, 'stats': stats_dict })
+
+def profile_update(request,user_id):
+    session = SessionLocal()
+    user = session.query(User).filter_by(user_id=user_id).first()
+    
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, current_username=user.username)
+        if form.is_valid():
+            try:
+                hashed_password = make_password(form.cleaned_data['password'])
+                user.password = hashed_password
+                session.commit()
+                return redirect('profile', user_name=user.username)
+            except Exception as e:
+                print(f"Error occurred: {e}")
+            finally:
+                session.close()
+    else:
+        form = RegistrationForm(initial={
+            'username': user.username
+            })
+
+    
+    return render(request, 'users/register.html', {'update_user': user, 'form': form, 'action': 'Update'})
 
 ###########################################################
 #################### Watchlist ############################

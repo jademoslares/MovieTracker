@@ -3,6 +3,7 @@ from .models import Movie, Actor, Genre, User
 from sqlalchemy.orm import Session
 from datetime import date
 from utilities.sqlalchemy_setup import SessionLocal,asc
+from django.core.cache import cache
 
 class MovieForm(forms.Form):
     type = forms.CharField(max_length=10,required=False)
@@ -34,6 +35,7 @@ class MovieForm(forms.Form):
 
             genre_list = session.query(Genre).order_by(asc(Genre.genre_name)).all()
             self.fields['genres'].choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
+  
         finally:
             session.close()
 
@@ -67,6 +69,10 @@ class RegistrationForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput,required=True)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=True)
 
+    def __init__(self, *args, current_username=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_username = current_username
+
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get("username")
@@ -75,10 +81,14 @@ class RegistrationForm(forms.Form):
 
         session = SessionLocal()
         check_user = session.query(User).filter_by(username=username).first()
-        if check_user:
+        session.close()
+        if check_user and username != self.current_username:
             raise forms.ValidationError("Username already exists.")
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
+        if password:
+            if len(password) < 8:
+                raise forms.ValidationError("Password must be at least 8 characters long.")
         
         return cleaned_data
     

@@ -13,6 +13,7 @@ urlpatterns = [
     path('movies/<str:show_id>/edit/', views.movie_update, name='movie_update'),
     path('movies/<str:show_id>/delete/', views.movie_delete, name='movie_delete'),
     path('profile/<str:user_name>/', views.profile, name='profile'),
+    path('profile/<str:user_id>/edit/', views.profile_update, name='profile_update'),
     path('watchlist/add/<str:show_id>/<user_id>/<plan_to_do>', views.add_to_watchlist, name='add_to_watchlist'),
     path('watchlist/remove/<str:show_id>/<user_id>/', views.remove_from_watchlist, name='remove_from_watchlist'),
     path('watchlist/update/<str:show_id>/<user_id>/<plan_to_do>/', views.update_watchlist, name='update_watchlist'),

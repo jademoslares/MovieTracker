@@ -24,7 +24,7 @@ def insert_data():
         try:
             for _, row in movies_data.iterrows():
                 # Insert movie data
-                print(row["show_id"] + " / " + len(movies_data))
+                print(f"{row['show_id']} / {len(movies_data)}")
                 session.execute(text("""
                     INSERT INTO movies (show_id, type, title, director, country, date_added, release_year, rating, duration, description)
                     VALUES (:show_id, :type, :title, :director, :country, STR_TO_DATE(:date_added, '%M %d, %Y'), :release_year, :rating, :duration, :description)
@@ -100,9 +100,8 @@ def remove_duplicates(batch_size=1000):
                     LIMIT {batch_size};
                 """))
                 
-                if result.rowcount == 0:  # Exit if no more duplicates
+                if result.rowcount == 0:
                     break
-                print(f"Removed {result.rowcount} duplicate actors")
 
             while True:
                 # Remove duplicate genres in batches
@@ -120,7 +119,7 @@ def remove_duplicates(batch_size=1000):
                 
                 if result.rowcount == 0:  # Exit if no more duplicates
                     break
-                print(f"Removed {result.rowcount} duplicate genres")
+
 
             session.commit()
             print("Duplicate genres and actors removed successfully")
@@ -137,3 +136,21 @@ try:
     print("Duplicate removal completed.")
 except Exception as e:
     print(f"An error occurred during the duplicate removal process: {e}")
+
+def insert_admin():
+    with SessionLocal() as session:
+        try:
+            session.execute(text("""
+                                 INSERT INTO users (username, password, user_type)
+                                 VALUES ('admin', 'pbkdf2_sha256$870000$dKtBnTffUBPt3cVYsKAG2E$wtj2Wy/5lLN5m48K7waHvgPhMsLzme8W0/lLIXgpyMM=', 'admin');
+            """))
+            session.commit()
+            print("Admin user inserted successfully")
+        except Exception as e:
+            session.rollback()
+            print(f"An error occurred while inserting the admin user: {e}")
+        finally:
+            session.close()
+
+insert_admin()
+print("Admin user insertion completed.")

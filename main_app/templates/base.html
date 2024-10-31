@@ -34,16 +34,20 @@
               <a href="/" class="left brand-logo">&nbsp;&nbsp;Movie Tracker</a>
             </li>
             <li id="search">
-                <div class="search-container">
-                    <form method="GET" action="{% url 'home' %}">
-                        <input type="text" name="q" placeholder="Search for a movie..." value="{{ query|default:'' }}">
-                        <button type="submit"style="display:none">Search</button>
-                      </form>
-                  </form>
-                </div>
-              </li>
+              <div class="search-container">
+                <form method="GET" action="{% url 'home' %}">
+                  <input
+                    type="text"
+                    name="q"
+                    placeholder="Search for a movie..."
+                    value="{{ query|default:'' }}"
+                  />
+                  <button type="submit" style="display: none">Search</button>
+                </form>
+              </div>
+            </li>
           </ul>
-          
+
           <ul class="right">
             {% if user.is_authenticated %}
             <li>Welcome, {{user.username}}</li>
@@ -82,19 +86,24 @@
             </li>
             <li>
               <a href="{% url 'logout' %}"
-                ><i class="material-icons">logout</i>Logout</a>
-                <form method="POST" action="{% url 'logout' %}" style="display: none;">
-                  {% csrf_token %}
-                  <button type="submit">Logout</button>
-                </form>
+                ><i class="material-icons">logout</i>Logout</a
+              >
+              <form
+                method="POST"
+                action="{% url 'logout' %}"
+                style="display: none"
+              >
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+              </form>
             </li>
           </ul>
           {%else%}
           <ul id="dropdown1" class="dropdown-content">
             <li>
-                <a href="{% url 'profile' user.username %}">
-                    <i class="material-icons">person</i>Profile</a>
-                </a>
+              <a href="{% url 'profile' user.username %}">
+                <i class="material-icons">person</i>Profile
+              </a>
             </li>
             <li>
               <a href="{% url 'about' %}"
@@ -108,20 +117,23 @@
             </li>
             <li>
               <a href="{% url 'logout' %}"
-                ><i class="material-icons">logout</i>Logout</a>
-                <form method="POST" action="{% url 'logout' %}" style="display: none;">
-                  {% csrf_token %}
-                  <button type="submit">Logout</button>
-                </form>
-                </a>
+                ><i class="material-icons">logout</i>Logout</a
+              >
+              <form
+                method="POST"
+                action="{% url 'logout' %}"
+                style="display: none"
+              >
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+              </form>
             </li>
           </ul>
+          {% endif %} {% else %}
+          <li>
+            <a href="{% url 'login' %}">Login</a>
+          </li>
           {% endif %}
-            {% else %}
-            <li>
-              <a href="{% url 'login' %}">Login</a>
-            </li>
-            {% endif %}
         </div>
       </nav>
     </header>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% block content %}
 <div class="container">
-  <h2>Register</h2>
+  <h2>{{ action}} Account</h2>
 
   <form method="POST" class="register-form">
     {% csrf_token %}
@@ -35,12 +35,14 @@
       {% endif %}
     </div>
 
-    <button type="submit" class="btn waves-effect waves-light">Register</button>
+    <button type="submit" class="btn waves-effect waves-light">{{action}}</button>
   </form>
 
+  {% if action == "Register"%}
   <div class="margin-top">
     <a href="{% url 'login' %}">Already have an account? Login here</a>
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}

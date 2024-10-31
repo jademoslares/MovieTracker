@@ -3,10 +3,12 @@
   <div class="col s6">
     <div class="card">
       <div class="card-content">
+        {% if request.session.user_type == "guest" %}
         {% if checklistStatus == "" %}
         <span class="right">Not in Watchlist</span>
         {% else %}
         <span class="right">{{ checklistStatus }}</span>
+        {% endif %}
         {% endif %}
         <span class="card-title"><strong>{{ movie.title }}</strong></span>
         <p><strong>Director:</strong> {{ movie.director }}</p>
@@ -16,6 +18,7 @@
         {% if movie.duration %}
         <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
         {% endif %}
+        
         <p>
           <strong>Genres:</strong> {% for genre in genres %} {{ genre.genre_name }} {% endfor %}
         </p>
@@ -42,13 +45,13 @@
 
         {% if request.session.user_type == "guest" %}
         {% if is_in_watchlist == False %}
-        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'plan_to_watch' %}">Add to Watchlist</a>
-        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'watching' %}">Watching</a>
-        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'finished' %}">Finished</a>
+        <a href="{% url 'add_to_watchlist' movie.show_id currently_user.user_id 'plan_to_watch' %}">Add to Watchlist</a>
+        <a href="{% url 'add_to_watchlist' movie.show_id currently_user.user_id 'watching' %}">Watching</a>
+        <a href="{% url 'add_to_watchlist' movie.show_id currently_user.user_id 'finished' %}">Finished</a>
         {% elif is_in_watchlist == True %}
-        <a href="{% url 'update_watchlist' movie.show_id user.id 'plan_to_watch' %}">Add to Watchlist</a>
-        <a href="{% url 'update_watchlist' movie.show_id user.id 'watching' %}">Watching</a>
-        <a href="{% url 'update_watchlist' movie.show_id user.id 'finished' %}">Finished</a>
+        <a href="{% url 'update_watchlist' movie.show_id currently_user.user_id 'plan_to_watch' %}">Add to Watchlist</a>
+        <a href="{% url 'update_watchlist' movie.show_id currently_user.user_id 'watching' %}">Watching</a>
+        <a href="{% url 'update_watchlist' movie.show_id currently_user.user_id 'finished' %}">Finished</a>
         {% endif %}
         {% endif %}
       </div>
