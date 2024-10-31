@@ -30,7 +30,6 @@
 
 - Creating a movie may cause the application to become unresponsive while it fetches data for actors and genres due to high load
 - Database settings can be found in MovieTracker/settings.py, and SQLAlchemy configurations are in utilities/sqlalchemy_setup.py.
-- link to original repo https://github.com/jademoslares/MovieTracker
 
 ### Improvements
 
