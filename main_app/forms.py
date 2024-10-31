@@ -30,12 +30,25 @@ class MovieForm(forms.Form):
         super(MovieForm, self).__init__(*args, **kwargs)
         session: Session = SessionLocal()
         try:
-            actor_list = session.query(Actor).order_by(asc(Actor.actor_name)).all()
-            self.fields['actors'].choices = [(actor.actor_id, actor.actor_name) for actor in actor_list]
+            # actor_list = session.query(Actor).order_by(asc(Actor.actor_name)).all()
+            # self.fields['actors'].choices = [(actor.actor_id, actor.actor_name) for actor in actor_list]
 
-            genre_list = session.query(Genre).order_by(asc(Genre.genre_name)).all()
-            self.fields['genres'].choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
-  
+            # genre_list = session.query(Genre).order_by(asc(Genre.genre_name)).all()
+            # self.fields['genres'].choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
+
+            actor_choices = cache.get('actor_choices')
+            if not actor_choices:
+                actor_list = session.query(Actor).order_by(asc(Actor.actor_name)).all()
+                actor_choices = [(actor.actor_id, actor.actor_name) for actor in actor_list]
+                cache.set('actor_choices', actor_choices, timeout=60 * 30)
+            self.fields['actors'].choices = actor_choices
+
+            genre_choices = cache.get('genre_choices')
+            if not genre_choices:
+                genre_list = session.query(Genre).order_by(asc(Genre.genre_name)).all()
+                genre_choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
+                cache.set('genre_choices', genre_choices, timeout=60 * 30)
+            self.fields['genres'].choices = genre_choices
         finally:
             session.close()
 

@@ -13,6 +13,9 @@ netflix_data = netflix_data.fillna({"title": "N/A", "director": "N/A", "country"
                                      "listed_in": "N/A"})
 movies_data = netflix_data[netflix_data['type'] == 'Movie'].copy()
 movies_data['show_id'] = movies_data['show_id'].str.replace("s", "", regex=False)
+movies_data = movies_data.drop_duplicates(subset=['show_id'])
+
+
 
 # output_csv_file_path = 'netflix_movies.csv'
 # movies_data.to_csv(output_csv_file_path, index=False)
@@ -22,9 +25,10 @@ movies_data['show_id'] = movies_data['show_id'].str.replace("s", "", regex=False
 def insert_data():
     with SessionLocal() as session:
         try:
-            for _, row in movies_data.iterrows():
+            for index, row in movies_data.iterrows():
                 # Insert movie data
-                print(f"{row['show_id']} / {len(movies_data)}")
+                # print(f"{row['show_id']} / {len(movies_data)}")
+                print(f"Processing movie {index + 1} / {len(movies_data)}")
                 session.execute(text("""
                     INSERT INTO movies (show_id, type, title, director, country, date_added, release_year, rating, duration, description)
                     VALUES (:show_id, :type, :title, :director, :country, STR_TO_DATE(:date_added, '%M %d, %Y'), :release_year, :rating, :duration, :description)

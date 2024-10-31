@@ -13,7 +13,7 @@ CREATE DATABASE IF NOT EXISTS dbMovie;
 USE dbMovie;
 
 CREATE TABLE IF NOT EXISTS movies (
-    show_id VARCHAR(10) PRIMARY KEY,
+    show_id INT PRIMARY KEY,
     type VARCHAR(10),
     title VARCHAR(255),
     director VARCHAR(255),
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS actors (
 );
 
 CREATE TABLE IF NOT EXISTS show_actors (
-    show_id VARCHAR(10),
+    show_id INT,
     actor_id INT,
     FOREIGN KEY (show_id) REFERENCES movies(show_id),
     FOREIGN KEY (actor_id) REFERENCES actors(actor_id),
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS genres (
 );
 
 CREATE TABLE IF NOT EXISTS show_genres (
-    show_id VARCHAR(10),
+    show_id INT,
     genre_id INT,
     FOREIGN KEY (show_id) REFERENCES movies(show_id),
     FOREIGN KEY (genre_id) REFERENCES genres(genre_id),
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS watchlist (
     watchlist_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    show_id VARCHAR(10),
+    show_id INT,
     status ENUM('watching', 'plan_to_watch', 'finished'),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (show_id) REFERENCES movies(show_id)
