@@ -16,8 +16,8 @@ class Movie(Base):
     duration = Column(Integer)
     description = Column(String(255), nullable=True)
 
-    actors = relationship('ShowActor', back_populates='movie')
-    genres = relationship('ShowGenre', back_populates='movie')
+    actors = relationship('ShowActor', back_populates='movie', cascade='all, delete-orphan')
+    genres = relationship('ShowGenre', back_populates='movie', cascade='all, delete-orphan')
     
 
 class Actor(Base):
@@ -25,7 +25,7 @@ class Actor(Base):
     actor_id = Column(Integer, primary_key=True, autoincrement=True)
     actor_name = Column(String(255), nullable=False)
 
-    shows = relationship('ShowActor', back_populates='actor')
+    shows = relationship('ShowActor', back_populates='actor', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -46,7 +46,7 @@ class Genre(Base):
     genre_id = Column(Integer, primary_key=True, autoincrement=True)
     genre_name = Column(String(255), nullable=False)
 
-    shows = relationship('ShowGenre', back_populates='genre')
+    shows = relationship('ShowGenre', back_populates='genre', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -69,7 +69,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     user_type = Column(String(10), nullable=False)
 
-    watchlist = relationship('Watchlist', back_populates='user')
+    watchlist = relationship('Watchlist', back_populates='user', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {

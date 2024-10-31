@@ -8,8 +8,15 @@
         <p>Country: {{ movie.country }}</p>
         <p>Release Year: {{ movie.release_year }}</p>
         <p>Rating: {{ movie.rating }}</p>
+        {% if movie.duration %}
+        <p>Duration: {{ movie.duration }} minutes</p>
+        {% endif %}
+        <p>
+          Genres: {% for genre in genres %} {{ genre.genre_name }} {% endfor %}
+        </p>
         <p>Description: {{ movie.description }}</p>
       </div>
+
       <div class="card-action">
         <a href="{% url 'movie_update' movie.show_id %}">Edit</a>
         <form
@@ -22,26 +29,31 @@
           <button type="submit">Delete</button>
         </form>
 
-        <button type="button" onclick="confirmDelete()">Delete</button>
+        <a type="button" onclick="confirmDelete()">Delete</a>
 
         <a href="{% url 'home' %}">Back to List</a>
       </div>
     </div>
   </div>
 
-  <h3>Actors:</h3>
-  <ul>
-    {% for actor in actors %}
-    <li>{{ actor.actor_name }}</li>
-    {% endfor %}
-  </ul>
+  <div class="col s6">
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Actor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for actor in actors %}
+        <tr>
+          <td>{{ actor.actor_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  <h3>Genres:</h3>
-  <ul>
-    {% for genre in genres %}
-    <li>{{ genre.genre_name }}</li>
-    {% endfor %}
-  </ul>
+
 
   <script>
     function confirmDelete() {

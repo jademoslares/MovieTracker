@@ -5,11 +5,11 @@ from datetime import date
 from utilities.sqlalchemy_setup import SessionLocal,asc
 
 class MovieForm(forms.Form):
-    type = forms.CharField(max_length=10, required=True)
+    type = forms.CharField(max_length=10,required=False)
     title = forms.CharField(max_length=255, required=True)
     director = forms.CharField(max_length=255, required=True)
-    country = forms.CharField(max_length=100, required=True)
-    date_added = forms.DateField(required=True)
+    country = forms.CharField(max_length=255, required=True)
+    date_added = forms.DateField(required=False)
     release_year = forms.IntegerField(required=True)
     rating = forms.CharField(max_length=10,required=True)
     duration = forms.IntegerField(required=True)
@@ -63,9 +63,9 @@ class GenreForm(forms.Form):
 
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(max_length=150, required=True)
+    password = forms.CharField(widget=forms.PasswordInput,required=True)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=True)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -79,5 +79,5 @@ class RegistrationForm(forms.Form):
     
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(max_length=150, required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)

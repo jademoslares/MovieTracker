@@ -1,21 +1,43 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block content %}
 
 <h2>Login</h2>
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="error" style="color: red;">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 <form method="POST">
     {% csrf_token %}
 
+    <!-- Display non-field errors -->
+    {% if form.non_field_errors %}
+        <div class="error" style="color: red;">{{ form.non_field_errors }}</div>
+    {% endif %}
+
     <div class="input-field col s12">
         <label for="username">Username</label>
         <input type="text" name="username" id="username" required>
+        {% if form.username.errors %}
+            <div class="error" style="color: red;">{{ form.username.errors }}</div>
+        {% endif %}
     </div>
     
     <div class="input-field col s12">
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
+        {% if form.password.errors %}
+            <div class="error" style="color: red;"> {{ form.password.errors }}</div>
+        {% endif %}
     </div>
+    
     <button type="submit" class="btn">Login</button>
 </form>
 
 <a href="{% url 'register' %}">Don't have an account? Register here</a>
+
 {% endblock %}

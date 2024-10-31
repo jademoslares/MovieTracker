@@ -7,16 +7,26 @@ from sqlalchemy.orm import Session
 from utilities.sqlalchemy_setup import SessionLocal
 from .models import User,Movie,Actor,Genre,ShowActor,ShowGenre
 from .forms import MovieForm, ActorForm, GenreForm, RegistrationForm, LoginForm
+from datetime import datetime
+from django.core.paginator import Paginator
 
 def home(request):
     session: Session = SessionLocal()
+    query = request.GET.get('q')
     try:
-        movies = session.query(Movie).all()
+        if query:
+            movies = session.query(Movie).filter(Movie.title.ilike(f'%{query}%')).all()
+        else:
+            movies = session.query(Movie).all()
 
     finally:
         session.close()
 
-    return render(request, 'home.html', {'movies': movies})
+    paginator = Paginator(movies, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'home.html', {'page_obj': page_obj})
 
 ###########################################################
 #################### MOVIE ################################
@@ -26,7 +36,6 @@ def movie_detail(request, show_id):
         movie = session.query(Movie).filter_by(show_id=show_id).first()
         actors = session.query(Actor).join(ShowActor).filter(ShowActor.show_id == show_id).all()
         genres = session.query(Genre).join(ShowGenre).filter(ShowGenre.show_id == show_id).all()
-        print(actors)
     finally:
         session.close()
 
@@ -36,18 +45,25 @@ def movie_detail(request, show_id):
 def movie_create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST)
+        
+        if not form.is_valid():
+            print(form.errors)
+
         if form.is_valid():
             session = SessionLocal()
             try:
                 # print(form.cleaned_data)
                 # print("Selected Actor IDs:", selected_actor_ids)
+                date_added = datetime.now().strftime('%B %d, %Y')
+                converted_date = datetime.strptime(date_added, '%B %d, %Y').date()
+
                 new_movie = Movie(
                     show_id = session.query(Movie).count() + 1,
                     type = "Movie",
                     title = form.cleaned_data['title'],
                     director = form.cleaned_data['director'],
                     country = form.cleaned_data['country'],
-                    date_added = form.cleaned_data['date_added'],
+                    date_added = converted_date,
                     release_year = form.cleaned_data['release_year'],
                     rating = form.cleaned_data['rating'],
                     duration = form.cleaned_data['duration'],
@@ -250,6 +266,7 @@ def genre_create(request):
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
+
         if form.is_valid():
             session = SessionLocal()
             try:

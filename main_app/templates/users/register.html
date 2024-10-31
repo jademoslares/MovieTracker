@@ -1,23 +1,38 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block content %}
 
 <h2>Register</h2>
 
 <form method="POST">
     {% csrf_token %}
 
+    <!-- Display non-field errors -->
+    {% if form.non_field_errors %}
+        <div class="error" style="color: red;">{{ form.non_field_errors }}</div>
+    {% endif %}
+
     <div class="input-field col s12">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" required>
+        {{ form.username.label }}  
+        {{ form.username }}         
+        {% if form.username.errors %}
+            <div class="error" style="color: red;">{{ form.username.errors }}</div>
+        {% endif %}
     </div>
 
     <div class="input-field col s12">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
+        {{ form.password.label }}  
+        {{ form.password }}         
+        {% if form.password.errors %}
+            <div class="error" style="color: red;">{{ form.password.errors }}</div>
+        {% endif %}
     </div>
 
     <div class="input-field col s12">
-        <label for="confirm_password">Confirm Password</label>
-        <input type="password" name="confirm_password" id="confirm_password" required>
+        {{ form.confirm_password.label }}  
+        {{ form.confirm_password }}         
+        {% if form.confirm_password.errors %}
+            <div class="error" style="color: red;">{{ form.confirm_password.errors }}</div>
+        {% endif %}
     </div>
 
     <button type="submit" class="btn">Register</button>
