@@ -15,6 +15,9 @@ class SQLAlchemyAuthBackend(BaseBackend):
 
             django_user, created = DjangoUser.objects.get_or_create(username=username)
             django_user.backend = 'main_app.backends.SQLAlchemyAuthBackend'
+
+            if request:
+                request.session['user_type'] = user.user_type
             return django_user
         return None
     

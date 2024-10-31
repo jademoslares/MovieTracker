@@ -68,6 +68,8 @@ CREATE TABLE IF NOT EXISTS watchlist (
     FOREIGN KEY (show_id) REFERENCES movies(show_id)
 );
 
+INSERT INTO users (username, password, user_type) 
+VALUES ('admin', 'pbkdf2_sha256$870000$dKtBnTffUBPt3cVYsKAG2E$wtj2Wy/5lLN5m48K7waHvgPhMsLzme8W0/lLIXgpyMM=', 'admin');
 """
 
 try:

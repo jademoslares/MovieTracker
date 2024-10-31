@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate,logout
+from django.contrib.auth.hashers import make_password
+from .decorators import user_type_required
+from django.contrib import messages
 from sqlalchemy.orm import Session
 from utilities.sqlalchemy_setup import SessionLocal
 from .models import User,Movie,Actor,Genre,ShowActor,ShowGenre
-from .forms import MovieForm, ActorForm, GenreForm
+from .forms import MovieForm, ActorForm, GenreForm, RegistrationForm, LoginForm
 
 def home(request):
     session: Session = SessionLocal()
@@ -28,6 +32,7 @@ def movie_detail(request, show_id):
 
     return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres})
 
+@user_type_required('admin')
 def movie_create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST)
@@ -86,6 +91,7 @@ def movie_create(request):
 
     return render(request, 'movies/movie_form.html', {'form': form, 'action': 'Create'})
 
+@user_type_required('admin')
 def movie_update(request, show_id):
     session = SessionLocal()
     movie = session.query(Movie).filter_by(show_id=show_id).first()
@@ -159,7 +165,7 @@ def movie_update(request, show_id):
 
     return render(request, 'movies/movie_form.html', {'form': form, 'action': 'Update'})
 
-
+@user_type_required('admin')
 def movie_delete(request, show_id):
     session = SessionLocal()
     movie = session.query(Movie).filter_by(show_id=show_id).first()
@@ -187,6 +193,7 @@ def actor_list():
         session.close()
     return actors
 
+@user_type_required('admin')
 def actor_create(request):
     if request.method == 'POST':
         form = ActorForm(request.POST)
@@ -217,6 +224,7 @@ def genre_list():
         session.close()
     return genres
 
+@user_type_required('admin')
 def genre_create(request):
     if request.method == 'POST':
         form = GenreForm(request.POST)
@@ -235,6 +243,59 @@ def genre_create(request):
     else:
         form = GenreForm()
     return render(request, 'genres/genre_form.html', {'form': form})
+
+###########################################################
+#################### LOGINS ################################
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            session = SessionLocal()
+            try:
+                hashed_password = make_password(form.cleaned_data['password'])
+                new_user = User(
+                    username=form.cleaned_data['username'],
+                    password=hashed_password,
+                    user_type='guest'
+                    )
+                session.add(new_user)
+                session.commit()
+                return redirect('login')
+            except Exception as e:
+                session.rollback()
+                print(f"Error occurred: {e}")
+            finally:
+                session.close()
+    else:
+        form = RegistrationForm()
+    
+    return render(request, 'users/register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            try:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                user = authenticate(request, username=username, password=password)
+
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Invalid username or password.')
+            except Exception as e:
+                print(f"Error occurred: {e}")
+    else:
+        form = LoginForm()
+
+    return render(request, 'users/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 def about(request):
     return render(request, 'about.html')

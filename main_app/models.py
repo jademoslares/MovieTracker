@@ -9,7 +9,7 @@ class Movie(Base):
     type = Column(String(10))
     title = Column(String(255))
     director = Column(String(255), nullable=True)
-    country = Column(String(100), nullable=True)
+    country = Column(String(255), nullable=True)
     date_added = Column(Date, nullable=True)
     release_year = Column(Integer)
     rating = Column(String(10))

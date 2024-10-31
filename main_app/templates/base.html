@@ -35,13 +35,15 @@
             </li>
           </ul>
           <ul class="right">
-            <!-- <li>Welcome, </li> -->
+            {% if user.is_authenticated %}
+            <li>Welcome, {{user.username}}</li>
             <li>
               <a class="dropdown-button" href="#" data-target="dropdown1">
                 <i class="material-icons">menu</i>
               </a>
             </li>
           </ul>
+          {% if request.session.user_type == "admin" %}
           <ul id="dropdown1" class="dropdown-content">
             <li>
               <a href="{% url 'movie_create' %}"
@@ -68,7 +70,44 @@
                 ><i class="material-icons">movie</i>Movies</a
               >
             </li>
+            <li>
+              <a href="{% url 'logout' %}"
+                ><i class="material-icons">logout</i>Logout</a>
+                <form method="POST" action="{% url 'logout' %}" style="display: none;">
+                  {% csrf_token %}
+                  <button type="submit">Logout</button>
+                </form>
+                </a>
+            </li>
           </ul>
+          {%else%}
+          <ul id="dropdown1" class="dropdown-content">
+            <li>
+              <a href="{% url 'about' %}"
+                ><i class="material-icons">info</i>About</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'home' %}"
+                ><i class="material-icons">movie</i>Movies</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'logout' %}"
+                ><i class="material-icons">logout</i>Logout</a>\
+                <form method="POST" action="{% url 'logout' %}" style="display: none;">
+                  {% csrf_token %}
+                  <button type="submit">Logout</button>
+                </form>
+                </a>
+            </li>
+          </ul>
+          {% endif %}
+            {% else %}
+            <li>
+              <a href="{% url 'login' %}">Login</a>
+            </li>
+            {% endif %}
         </div>
       </nav>
     </header>
