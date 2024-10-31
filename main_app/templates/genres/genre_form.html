@@ -1,8 +1,17 @@
-{% extends 'base.html' %} {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add</button>
-</form>
-<a href="{% url 'home' %}">Cancel</a>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="center-align">Add Genre</h1>
+
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        <div class="input-field">
+            {{ form.as_p|safe }}
+        </div>
+        
+        <button type="submit" class="waves-effect waves-light btn">Add</button>
+        <a href="{% url 'home' %}" class="waves-effect waves-light btn grey">Cancel</a>
+    </form>
+</div>
 {% endblock %}

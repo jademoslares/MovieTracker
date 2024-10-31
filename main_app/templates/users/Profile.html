@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="center-align">Profile Page</h1>
+    <p class="flow-text">Welcome, {{ user.username }}!</p>
+
+    <h2>{{ user.username }}'s Watchlist</h2>
+    <table class="striped centered">
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for show_id, title, status in watchlist %}
+            <tr>
+                <td><a href="{% url 'movie_detail' show_id %}" class="blue-text">{{ title }}</a></td>
+                <td>
+                    {% if status == "plan_to_watch" %}
+                    Plan to Watch
+                    {% elif status == "finished" %}
+                    Finished
+                    {% elif status == "watching" %}
+                    Watching
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'remove_from_watchlist' show_id user.user_id %}" class="btn red waves-effect waves-light">X</a>
+                    <a href="{% url 'update_watchlist' show_id user.user_id 'plan_to_watch' %}" class="btn blue waves-effect waves-light">Plan to Watch</a>
+                    <a href="{% url 'update_watchlist' show_id user.user_id 'watching' %}" class="btn green waves-effect waves-light">Watching</a>
+                    <a href="{% url 'update_watchlist' show_id user.user_id 'finished' %}" class="btn orange waves-effect waves-light">Finished</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

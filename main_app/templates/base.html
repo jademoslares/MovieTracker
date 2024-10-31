@@ -92,6 +92,11 @@
           {%else%}
           <ul id="dropdown1" class="dropdown-content">
             <li>
+                <a href="{% url 'profile' user.username %}">
+                    <i class="material-icons">person</i>Profile</a>
+                </a>
+            </li>
+            <li>
               <a href="{% url 'about' %}"
                 ><i class="material-icons">info</i>About</a
               >

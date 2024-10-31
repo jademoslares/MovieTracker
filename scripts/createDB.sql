@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS watchlist (
     watchlist_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     show_id VARCHAR(10),
-    status ENUM('watching', 'plan to watch', 'finished'),
+    status ENUM('watching', 'plan_to_watch', 'finished'),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (show_id) REFERENCES movies(show_id)
 );

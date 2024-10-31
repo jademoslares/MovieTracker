@@ -5,7 +5,7 @@ from .decorators import user_type_required
 from django.contrib import messages
 from sqlalchemy.orm import Session
 from utilities.sqlalchemy_setup import SessionLocal
-from .models import User,Movie,Actor,Genre,ShowActor,ShowGenre
+from .models import User,Movie,Actor,Genre,ShowActor,ShowGenre, Watchlist, WatchStatusEnum
 from .forms import MovieForm, ActorForm, GenreForm, RegistrationForm, LoginForm
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -16,6 +16,8 @@ def home(request):
     try:
         if query:
             movies = session.query(Movie).filter(Movie.title.ilike(f'%{query}%')).all()
+            if not movies:
+                movies = session.query(Movie).filter(Movie.genres.ilike(f'%{query}%')).all()
         else:
             movies = session.query(Movie).all()
 
@@ -36,10 +38,21 @@ def movie_detail(request, show_id):
         movie = session.query(Movie).filter_by(show_id=show_id).first()
         actors = session.query(Actor).join(ShowActor).filter(ShowActor.show_id == show_id).all()
         genres = session.query(Genre).join(ShowGenre).filter(ShowGenre.show_id == show_id).all()
+
+        is_in_watchlist = False
+        checklistStatus = ''
+
+        if request.user.is_authenticated:
+            user = session.query(User).filter_by(username=request.user.username).first()
+            check_watchlist = session.query(Watchlist).filter_by(user_id=user.user_id, show_id=show_id).first()
+            if check_watchlist:
+                is_in_watchlist = True
+                checklistStatus = check_watchlist.status.value
     finally:
         session.close()
+        print(is_in_watchlist)
 
-    return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres})
+    return render(request, 'movies/movie_detail.html', {'movie': movie, 'actors': actors, 'genres': genres, 'is_in_watchlist': is_in_watchlist, 'checklistStatus': checklistStatus})
 
 @user_type_required('admin')
 def movie_create(request):
@@ -314,5 +327,83 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
+###########################################################
+#################### PROFILE ##############################
+@user_type_required('guest')
+def profile(request,user_name):
+    session = SessionLocal()
+    try:
+        user = session.query(User).filter_by(username=user_name).first()
+
+        if user:
+            watchlist =(
+                session.query(Watchlist, Movie.title)
+                .join(Movie, Watchlist.show_id == Movie.show_id)
+                .filter(Watchlist.user_id == user.user_id)
+                .all()
+            )
+
+            personal_movies = [(w.show_id, title, w.status.value) for w, title in watchlist]
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        session.close()
+
+    return render(request, 'users/profile.html', { 'user': user, 'watchlist': personal_movies })
+
+###########################################################
+#################### Watchlist ############################
+@user_type_required('guest')
+def add_to_watchlist(request,show_id,user_id,plan_to_do):
+    session = SessionLocal()
+    try:
+        watchlist_entry = Watchlist(user_id=user_id, show_id=show_id, status=plan_to_do)
+        session.add(watchlist_entry)
+        session.commit()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        session.close()
+    
+    return redirect('movie_detail', show_id=show_id)
+
+@user_type_required('guest')
+def update_watchlist(request,show_id,user_id,plan_to_do):
+    session = SessionLocal()
+    try:
+        watchlist_entry = session.query(Watchlist).filter_by(show_id=show_id, user_id=user_id).first()
+        if watchlist_entry:
+            watchlist_entry.status = plan_to_do
+            print(plan_to_do)
+            session.commit()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        session.close()
+    
+    return redirect('profile', user_name=request.user.username)
+
+@user_type_required('guest')
+def remove_from_watchlist(request,show_id,user_id):
+    session = SessionLocal()
+    try:
+        watchlist_entry = session.query(Watchlist).filter_by(show_id=show_id, user_id=user_id).first()
+        if watchlist_entry:
+            session.delete(watchlist_entry)
+            session.commit()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        session.close()
+    
+    return redirect('profile', user_name=request.user.username)
+
+###########################################################
+#################### Others ###############################
+
 def about(request):
     return render(request, 'about.html')
+
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)

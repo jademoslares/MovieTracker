@@ -3,6 +3,11 @@
   <div class="col s6">
     <div class="card">
       <div class="card-content">
+        {% if checklistStatus == "" %}
+        <span class="right">Not in Watchlist</span>
+        {% else %}
+        <span class="right">{{ checklistStatus }}</span>
+        {% endif %}
         <span class="card-title">{{ movie.title }}</span>
         <p>Director: {{ movie.director }}</p>
         <p>Country: {{ movie.country }}</p>
@@ -18,6 +23,7 @@
       </div>
 
       <div class="card-action">
+        {% if request.session.user_type == "admin" %}
         <a href="{% url 'movie_update' movie.show_id %}">Edit</a>
         <form
           id="delete-form"
@@ -30,8 +36,21 @@
         </form>
 
         <a type="button" onclick="confirmDelete()">Delete</a>
+        {% endif %}
 
         <a href="{% url 'home' %}">Back to List</a>
+
+        {% if request.session.user_type == "guest" %}
+        {% if is_in_watchlist == False %}
+        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'plan_to_watch' %}">Add to Watchlist</a>
+        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'watching' %}">Watching</a>
+        <a href="{% url 'add_to_watchlist' movie.show_id user.id 'finished' %}">Finished</a>
+        {% elif is_in_watchlist == True %}
+        <a href="{% url 'update_watchlist' movie.show_id user.id 'plan_to_watch' %}">Add to Watchlist</a>
+        <a href="{% url 'update_watchlist' movie.show_id user.id 'watching' %}">Watching</a>
+        <a href="{% url 'update_watchlist' movie.show_id user.id 'finished' %}">Finished</a>
+        {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
