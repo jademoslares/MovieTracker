@@ -343,14 +343,24 @@ def profile(request,user_name):
                 .filter(Watchlist.user_id == user.user_id)
                 .all()
             )
-
+            finished_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.finished).count()
+            watching_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.watching).count()
+            plan_to_watch_count = session.query(Watchlist).filter_by(user_id=user.user_id, status=WatchStatusEnum.plan_to_watch).count()
+            total_watchlist_count = finished_count + watching_count + plan_to_watch_count
+            stats_dict = {
+                'watching': watching_count,
+                'plan_to_watch': plan_to_watch_count,
+                'finished': finished_count,
+                'total': total_watchlist_count
+            }
+            
             personal_movies = [(w.show_id, title, w.status.value) for w, title in watchlist]
     except Exception as e:
         print(f"Error occurred: {e}")
     finally:
         session.close()
 
-    return render(request, 'users/profile.html', { 'user': user, 'watchlist': personal_movies })
+    return render(request, 'users/profile.html', { 'user': user, 'watchlist': personal_movies, 'stats': stats_dict })
 
 ###########################################################
 #################### Watchlist ############################
