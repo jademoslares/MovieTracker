@@ -1,43 +1,46 @@
 {% extends 'base.html' %} 
 {% block content %}
+<div class="container">
+  <h2>Register</h2>
 
-<h2>Register</h2>
-
-<form method="POST">
+  <form method="POST" class="register-form">
     {% csrf_token %}
 
     <!-- Display non-field errors -->
     {% if form.non_field_errors %}
-        <div class="error" style="color: red;">{{ form.non_field_errors }}</div>
+      <div class="error red-text">{{ form.non_field_errors }}</div>
     {% endif %}
 
     <div class="input-field col s12">
-        {{ form.username.label }}  
-        {{ form.username }}         
-        {% if form.username.errors %}
-            <div class="error" style="color: red;">{{ form.username.errors }}</div>
-        {% endif %}
+      {{ form.username.label }}
+      {{ form.username }}         
+      {% if form.username.errors %}
+        <div class="error red-text">{{ form.username.errors }}</div>
+      {% endif %}
     </div>
 
     <div class="input-field col s12">
-        {{ form.password.label }}  
-        {{ form.password }}         
-        {% if form.password.errors %}
-            <div class="error" style="color: red;">{{ form.password.errors }}</div>
-        {% endif %}
+      {{ form.password.label }}  
+      {{ form.password }}         
+      {% if form.password.errors %}
+        <div class="error red-text">{{ form.password.errors }}</div>
+      {% endif %}
     </div>
 
     <div class="input-field col s12">
-        {{ form.confirm_password.label }}  
-        {{ form.confirm_password }}         
-        {% if form.confirm_password.errors %}
-            <div class="error" style="color: red;">{{ form.confirm_password.errors }}</div>
-        {% endif %}
+      {{ form.confirm_password.label }}  
+      {{ form.confirm_password }}         
+      {% if form.confirm_password.errors %}
+        <div class="error red-text">{{ form.confirm_password.errors }}</div>
+      {% endif %}
     </div>
 
-    <button type="submit" class="btn">Register</button>
-</form>
+    <button type="submit" class="btn waves-effect waves-light">Register</button>
+  </form>
 
-<a href="{% url 'login' %}">Already have an account? Login here</a>
+  <div class="margin-top">
+    <a href="{% url 'login' %}">Already have an account? Login here</a>
+  </div>
+</div>
 
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Movie, Actor, Genre
+from .models import Movie, Actor, Genre, User
 from sqlalchemy.orm import Session
 from datetime import date
 from utilities.sqlalchemy_setup import SessionLocal,asc
@@ -69,9 +69,14 @@ class RegistrationForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        username = cleaned_data.get("username")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
+        session = SessionLocal()
+        check_user = session.query(User).filter_by(username=username).first()
+        if check_user:
+            raise forms.ValidationError("Username already exists.")
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
         

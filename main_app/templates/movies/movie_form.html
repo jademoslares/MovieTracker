@@ -1,102 +1,111 @@
 {% extends 'base.html' %} 
 {% block content %}
-<h1>{{ action }} Movie</h1>
+<div class="container">
+  <h1>{{ action }} Movie</h1>
 
-<form method="POST" class="movie-form">
-  {% csrf_token %}
+  <form method="POST" class="movie-form">
+    {% csrf_token %}
 
-  <!-- Display form errors -->
-  {% if form.non_field_errors %}
-  <div style="color: red">{{ form.non_field_errors }}</div>
-  {% endif %}
-
-  <div class="input-field col s12">
-    {{ form.title.label }} {{ form.title }}
-    {% if form.title.errors %}
-    <div style="color: red">{{ form.title.errors }}</div>
+    <!-- Display form errors -->
+    {% if form.non_field_errors %}
+      <div class="red-text">{{ form.non_field_errors }}</div>
     {% endif %}
-  </div>
 
-  <div class="input-field col s12">
-    {{ form.director.label }} {{ form.director }}
-    {% if form.director.errors %}
-    <div style="color: red">{{ form.director.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.title.label }} {{ form.title }}
+      {% if form.title.errors %}
+        <div class="red-text">{{ form.title.errors }}</div>
+      {% endif %}
+    </div>
 
-  <div class="input-field col s12">
-    {{ form.country.label }} {{ form.country }}
-    {% if form.country.errors %}
-    <div style="color: red">{{ form.country.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.director.label }} {{ form.director }}
+      {% if form.director.errors %}
+        <div class="red-text">{{ form.director.errors }}</div>
+      {% endif %}
+    </div>
 
-  <div class="input-field col s12">
-    {{ form.release_year.label }} {{ form.release_year }}
-    {% if form.release_year.errors %}
-    <div style="color: red">{{ form.release_year.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.country.label }} {{ form.country }}
+      {% if form.country.errors %}
+        <div class="red-text">{{ form.country.errors }}</div>
+      {% endif %}
+    </div>
 
-  <div class="input-field col s12">
-    {{ form.rating.label }} {{ form.rating }}
-    {% if form.rating.errors %}
-    <div style="color: red">{{ form.rating.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.release_year.label }} {{ form.release_year }}
+      {% if form.release_year.errors %}
+        <div class="red-text">{{ form.release_year.errors }}</div>
+      {% endif %}
+    </div>
 
-  <div class="input-field col s12">
-    {{ form.duration.label }} {{ form.duration }}
-    {% if form.duration.errors %}
-    <div style="color: red">{{ form.duration.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.rating.label }} {{ form.rating }}
+      {% if form.rating.errors %}
+        <div class="red-text">{{ form.rating.errors }}</div>
+      {% endif %}
+    </div>
 
-  <div class="input-field col s12">
-    {{ form.description.label }} {{ form.description }}
-    {% if form.description.errors %}
-    <div style="color: red">{{ form.description.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.duration.label }} {{ form.duration }}
+      {% if form.duration.errors %}
+        <div class="red-text">{{ form.duration.errors }}</div>
+      {% endif %}
+    </div>
 
-  <!-- Actors Field -->
-  <div class="input-field col s12">
-    <select multiple id="actors" name="actors">
-      <option value="" disabled>Choose your actors</option>
-      {% for actor_id, actor_name in form.actors.field.choices %}
-      <option value="{{ actor_id }}"
-        {% if actor_id in form.actors.value %}selected{% endif %}>
-        {{ actor_name }}
-      </option>
-      {% endfor %}
-    </select>
-    <label for="actors">Actors</label>
-    {% if form.actors.errors %}
-    <div style="color: red">{{ form.actors.errors }}</div>
-    {% endif %}
-  </div>
+    <div class="input-field col s12">
+      {{ form.description.label }} {{ form.description }}
+      {% if form.description.errors %}
+        <div class="red-text">{{ form.description.errors }}</div>
+      {% endif %}
+    </div>
 
-  <!-- Genres Field -->
-  <div class="input-field col s12">
-    <select multiple id="genres" name="genres">
-      <option value="" disabled>Choose your genres</option>
-      {% for genre_id, genre_name in form.genres.field.choices %}
-      <option value="{{ genre_id }}"
-        {% if genre_id in form.genres.value %}selected{% endif %}>
-        {{ genre_name }}
-      </option>
-      {% endfor %}
-    </select>
-    <label for="genres">Genres</label>
-    {% if form.genres.errors %}
-    <div style="color: red">{{ form.genres.errors }}</div>
-    {% endif %}
-  </div>
+    <!-- Actors Field -->
+    <div class="input-field col s12">
+      <select multiple id="actors" name="actors">
+        <option value="" disabled>Choose your actors</option>
+        {% for actor_id, actor_name in form.actors.field.choices %}
+          <option value="{{ actor_id }}" {% if actor_id in form.actors.value %}selected{% endif %}>
+            {{ actor_name }}
+          </option>
+        {% endfor %}
+      </select>
+      <label for="actors">Actors</label>
+      {% if form.actors.errors %}
+        <div class="red-text">{{ form.actors.errors }}</div>
+      {% endif %}
+    </div>
 
-  <button type="submit" class="btn waves-effect waves-light">
-    {{ action }}
-  </button>
-  <a href="{% url 'home' %}" class="btn grey lighten-1">Cancel</a>
-</form>
+    <!-- Genres Field -->
+    <div class="input-field col s12">
+      <select multiple id="genres" name="genres">
+        <option value="" disabled>Choose your genres</option>
+        {% for genre_id, genre_name in form.genres.field.choices %}
+          <option value="{{ genre_id }}" {% if genre_id in form.genres.value %}selected{% endif %}>
+            {{ genre_name }}
+          </option>
+        {% endfor %}
+      </select>
+      <label for="genres">Genres</label>
+      {% if form.genres.errors %}
+        <div class="red-text">{{ form.genres.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="input-field col s12">
+      <button type="submit" class="btn waves-effect waves-light">
+        {{ action }}
+      </button>
+      <a href="{% url 'home' %}" class="btn grey lighten-1">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
 
 {% endblock %}

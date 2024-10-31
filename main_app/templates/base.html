@@ -108,7 +108,7 @@
             </li>
             <li>
               <a href="{% url 'logout' %}"
-                ><i class="material-icons">logout</i>Logout</a>\
+                ><i class="material-icons">logout</i>Logout</a>
                 <form method="POST" action="{% url 'logout' %}" style="display: none;">
                   {% csrf_token %}
                   <button type="submit">Logout</button>

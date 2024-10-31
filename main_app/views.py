@@ -65,13 +65,13 @@ def movie_create(request):
         if form.is_valid():
             session = SessionLocal()
             try:
-                # print(form.cleaned_data)
-                # print("Selected Actor IDs:", selected_actor_ids)
                 date_added = datetime.now().strftime('%B %d, %Y')
                 converted_date = datetime.strptime(date_added, '%B %d, %Y').date()
+                last_id = session.query(Movie).order_by(Movie.show_id.desc()).first()
 
                 new_movie = Movie(
-                    show_id = session.query(Movie).count() + 1,
+                    #get the last ID from the database
+                    show_id = int(last_id.show_id) + 1,
                     type = "Movie",
                     title = form.cleaned_data['title'],
                     director = form.cleaned_data['director'],
