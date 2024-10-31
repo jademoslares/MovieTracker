@@ -66,8 +66,8 @@ def movie_create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST)
         
-        if not form.is_valid():
-            print(form.errors)
+        # if not form.is_valid():
+        #     print(form.errors)
 
         if form.is_valid():
             session = SessionLocal()
@@ -418,7 +418,6 @@ def update_watchlist(request,show_id,user_id,plan_to_do):
         watchlist_entry = session.query(Watchlist).filter_by(show_id=show_id, user_id=user_id).first()
         if watchlist_entry:
             watchlist_entry.status = plan_to_do
-            print(plan_to_do)
             session.commit()
     except Exception as e:
         print(f"Error occurred: {e}")

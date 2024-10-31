@@ -28,7 +28,7 @@ def insert_data():
             for index, row in movies_data.iterrows():
                 # Insert movie data
                 # print(f"{row['show_id']} / {len(movies_data)}")
-                print(f"Processing movie {index + 1} / {len(movies_data)}")
+                print(f"Processing movie {index + 1}")
                 session.execute(text("""
                     INSERT INTO movies (show_id, type, title, director, country, date_added, release_year, rating, duration, description)
                     VALUES (:show_id, :type, :title, :director, :country, STR_TO_DATE(:date_added, '%M %d, %Y'), :release_year, :rating, :duration, :description)
