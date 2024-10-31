@@ -1,47 +1,92 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Movie Tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.1.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="navbar-fixed">
-        <nav>
-            <div class="nav-wrapper">
-                <ul>
-                    <li>
-                        <a href="/" class="left brand-logo">&nbsp;&nbsp;Movie Tracker</a>
-                    </li>
-                </ul>
-                <ul class="right">
-                    <li><a href="{% url 'movie_create' %}">Add Movie</a></li>
-                    <li><a href="{% url 'actor_create' %}">Add Actor</a></li>
-                    <li><a href="{% url 'genre_create' %}">Add Genre</a></li>
-                    <li><a href="{% url 'about' %}">About</a></li>
-                    <li><a href="{% url 'home' %}">Movies</a></li>
-                </ul>
-            </div>
-        </nav>
+      <nav>
+        <div class="nav-wrapper black">
+          <ul>
+            <li>
+              <a href="/" class="left brand-logo">&nbsp;&nbsp;Movie Tracker</a>
+            </li>
+          </ul>
+          <ul class="right">
+            <!-- <li>Welcome, </li> -->
+            <li>
+              <a class="dropdown-button" href="#" data-target="dropdown1">
+                <i class="material-icons">menu</i>
+              </a>
+            </li>
+          </ul>
+          <ul id="dropdown1" class="dropdown-content">
+            <li>
+              <a href="{% url 'movie_create' %}"
+                ><i class="material-icons">add</i>Add Movie</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'actor_create' %}"
+                ><i class="material-icons">person_add</i>Add Actor</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'genre_create' %}"
+                ><i class="material-icons">category</i>Add Genre</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'about' %}"
+                ><i class="material-icons">info</i>About</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'home' %}"
+                ><i class="material-icons">movie</i>Movies</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
     <main class="container">{% block content %} {% endblock %}</main>
-    <footer class="page-footer">
-        <div class="right">
-            All Rights Reserved, &copy; 2021 Cat Collector &nbsp;
-        </div>
+    <footer class="page-footer black">
+      <div class="right">
+        All Rights Reserved, &copy; 2024 Movie Tracker &nbsp;
+      </div>
     </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('select').formSelect(); // Initialize Materialize select
-        });
+      $(document).ready(function () {
+        $("select").formSelect(); // Initialize Materialize select
+
+        // Initialize dropdown
+        var elems = document.querySelectorAll(".dropdown-button");
+        M.Dropdown.init(elems);
+      });
     </script>
-</body>
+  </body>
 </html>

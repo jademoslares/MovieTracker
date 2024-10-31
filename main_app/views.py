@@ -38,7 +38,7 @@ def movie_create(request):
                 # print("Selected Actor IDs:", selected_actor_ids)
                 new_movie = Movie(
                     show_id = session.query(Movie).count() + 1,
-                    type = form.cleaned_data['type'],
+                    type = "Movie",
                     title = form.cleaned_data['title'],
                     director = form.cleaned_data['director'],
                     country = form.cleaned_data['country'],
@@ -82,6 +82,7 @@ def movie_create(request):
                 session.close()
     else:
         form = MovieForm()
+        
 
     return render(request, 'movies/movie_form.html', {'form': form, 'action': 'Create'})
 
@@ -97,7 +98,7 @@ def movie_update(request, show_id):
         if form.is_valid():
             try:
                 # Update movie attributes
-                movie.type = form.cleaned_data['type']
+                movie.type = 'Movie'
                 movie.title = form.cleaned_data['title']
                 movie.director = form.cleaned_data['director']
                 movie.country = form.cleaned_data['country']

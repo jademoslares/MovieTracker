@@ -6,12 +6,19 @@
 <p>Rating: {{ movie.rating }}</p>
 <p>Description: {{ movie.description }}</p>
 
-<!-- <h3>Actors:</h3>
+<h3>Actors:</h3>
 <ul>
   {% for actor in actors %}
-    <li>{{ actor.name }}</li>
+    <li>{{ actor.actor_name }}</li>
   {% endfor %}
-</ul> -->
+</ul>
+
+<h3>Genres:</h3>
+<ul>
+  {% for genre in genres %}
+    <li>{{ genre.genre_name }}</li>
+  {% endfor %}
+</ul>
 
 <a href="{% url 'movie_update' movie.show_id %}">Edit</a>
 <form id="delete-form" action="{% url 'movie_delete' movie.show_id %}" method="POST" style="display:none;">

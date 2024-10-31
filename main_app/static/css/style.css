@@ -12,3 +12,13 @@ footer.page-footer {
   padding-top: 0;
   text-align: right;
 }
+
+.dropdown-content {
+  margin-top: 65px;
+  min-width: 260px;
+  align-items: center;
+  text-align: center;
+}
+
+
+

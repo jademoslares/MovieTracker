@@ -2,7 +2,7 @@ from django import forms
 from .models import Movie, Actor, Genre
 from sqlalchemy.orm import Session
 from datetime import date
-from utilities.sqlalchemy_setup import SessionLocal
+from utilities.sqlalchemy_setup import SessionLocal,asc
 
 class MovieForm(forms.Form):
     type = forms.CharField(max_length=10, required=True)
@@ -29,10 +29,10 @@ class MovieForm(forms.Form):
         super(MovieForm, self).__init__(*args, **kwargs)
         session: Session = SessionLocal()
         try:
-            actor_list = session.query(Actor).all()
+            actor_list = session.query(Actor).order_by(asc(Actor.actor_name)).all()
             self.fields['actors'].choices = [(actor.actor_id, actor.actor_name) for actor in actor_list]
 
-            genre_list = session.query(Genre).all()
+            genre_list = session.query(Genre).order_by(asc(Genre.genre_name)).all()
             self.fields['genres'].choices = [(genre.genre_id, genre.genre_name) for genre in genre_list]
         finally:
             session.close()

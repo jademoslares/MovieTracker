@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'main_app.backends.SQLAlchemyAuthBackend',  # Custom SQLAlchemy backend
+    'django.contrib.auth.backends.ModelBackend',  # Django's default backend
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
